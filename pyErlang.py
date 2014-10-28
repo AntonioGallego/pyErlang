@@ -124,7 +124,7 @@ print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls
 ######################################################################################
 
 print "-"*16
-print "-"*3,"PRODUBAN","-"*3
+print "-"*3,"EXAMPLE 1","-"*3
 print "-"*16
 
 calls=20.      # number of calls in a given time interval
@@ -150,7 +150,7 @@ print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls
 ######################################################################################
 
 print "-"*16
-print "-"*3,"PRODUBAN","-"*3
+print "-"*3,"EXAMPLE 2","-"*3
 print "-"*16
 
 calls=4280.      # number of calls in a given time interval
@@ -175,7 +175,7 @@ print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls
 ######################################################################################
 
 print "-"*16
-print "-"*3,"PRODUBAN","-"*3
+print "-"*3,"EXAMPLE 3","-"*3
 print "-"*16
 
 calls=1282.    # number of calls in a given time interval
