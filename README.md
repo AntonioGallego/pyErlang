@@ -5,6 +5,7 @@ Here's a link to a very good explanation about the Erlangs, and a few Python rou
 Aquí dejo una página con una explicación muy buena sobre los Erlangs, y unas rutinas en Python que escribí una tarde para calcular probabilidades de espera, número de agentes, niveles de servicio u temas relacionados con los Erlang. No soy para nada experto en el tema, simplemente necesitaba validar unos números y las calculadoras que encontraba no me servían (o yo no supe usarlas) 
 
 http://www.mitan.co.uk/erlang/elgcmath.htm (as of May 2021 this link is unavailable)
+
 https://web.archive.org/web/20181209042241/http://www.mitan.co.uk/erlang/elgcmath.htm (wayback machine)
 
 
