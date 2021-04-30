@@ -10,6 +10,7 @@ https://web.archive.org/web/20181209042241/http://www.mitan.co.uk/erlang/elgcmat
 
 Typical Output:
 
+```
 C:\Data\CODE>python pyErlang.py
 calls: 360   interval: 1800   landa: 0.20000000 (l = calls/interval)
 traffic intensity: 48.00   agents: 55    agent occupancy: 0.87
@@ -38,4 +39,4 @@ ErlangC, Probability of waiting: 68.21%
 ASA, Average speed of answer: 1227.8 secs
 Probability call is answered in less than 3600 secs: 90.77%
 Agents needed to reach 80.00% calls answered in <3600 secs: 11
-----------
+```
