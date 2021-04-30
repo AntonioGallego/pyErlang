@@ -1,8 +1,9 @@
 ## Originally published under http://wanlinksniper.blogspot.com.es/2014/05/erlang-c-en-python-herramientas-para-el.html
 ## A few Python routines I put together one evening to compute traffic intensity, agent occupancy, probability of waiting,
 ## average speed of answer (ASA), service level, agents needed and other Erlang-C related stuff.
-## http://www.mitan.co.uk/erlang/elgcmath.htm
-## Bitcoins, etc to Antonio Gallego amturing@gmail.com, complaints to /dev/null
+## broken link: http://www.mitan.co.uk/erlang/elgcmath.htm
+## wayback machine: https://web.archive.org/web/20181209042241/http://www.mitan.co.uk/erlang/elgcmath.htm
+## Python3 ported
 
 from math import pow,factorial,log,exp
 
@@ -14,10 +15,11 @@ def erlangC(m,u):
     ## Returns the probability a call waits.
     ## m is the agent count
     ## u is the traffic intensity
-    suma=0
+    p = u/m  ##  agent occupancy
+    suma = 0
     for k in range(0,m):
-        suma+=PowerFact(u,k)
-    erlang=PowerFact(u,m)/((PowerFact(u,m))+(1-p)*suma)
+        suma += PowerFact(u,k)
+    erlang = PowerFact(u,m) / ((PowerFact(u,m)) + (1-p)*suma)
     return erlang
 
 def SLA(m,u,T,target):
@@ -26,14 +28,14 @@ def SLA(m,u,T,target):
     ## u is the traffic intensity
     ## T is the average call time
     ## target is the target answer time
-    return (1 - erlangC(m, u) * exp(-(m-u)*(target/T)))
+    return (1 - erlangC(m, u) * exp(-(m-u) * (target/T)))
 
 def ASA(m,u,T):
     ## Returns the average speed of answer (ASA)
     ## m is the agent counts.
     ## u is the traffic intensity
     ## T is the average call time
-    return erlangC(m, u)*(T/(m-u))
+    return erlangC(m, u) * (T/(m-u))
 
 def agentsNeeded(u,T,targetSLA,target):
     ## Returns the number of agents needed to reach given SLA
@@ -44,157 +46,53 @@ def agentsNeeded(u,T,targetSLA,target):
     level=0
     m=1
     while level<targetSLA:
-        level=SLA(m,u,T,target)
-        m+=1
+        level = SLA(m,u,T,target)
+        m += 1
     return m-1
     
 
-######################################################################################
-######################################################################################
-######################################################################################
+def showStats(calls,interval,T,m,target,level):
+    # calls       number of calls in a given time interval
+    # interval    the time interval, in secs (1800 s == 30 minutes)
+    # landa       calls/interval
+    # T           average call duration, in secs
+    # m           number of agents
+    # u=landa*T   traffic intensity
+    # p=u/m       agent occupancy
+    landa = calls/interval
+    u=landa*T      # traffic intensity
+    p=u/m          # agent occupancy
 
-calls=360.     # number of calls in a given time interval
-interval=1800. # the time interval, in secs (1800 s == 30 minutes)
-landa=calls/interval
-T=240.         # average call duration, in secs
-m=55           # number of agents
-u=landa*T      # traffic intensity
-p=u/m          # agent occupancy
-
-print landa,'calls/interval'
-print u,'traffic intensity'
-print m,'agents'
-print p,'agent occupancy'
-print erlangC(m,u)*100,'% probability of waiting, ErlangC'
-print ASA(m,u,T),'secs, average speed of answer (ASA)'
-target=15
-print SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'secs'
-nivel=0.7
-print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls answered in <',target,'secs'
-
-######################################################################################
-######################################################################################
-######################################################################################
-
-print "-"*10
-
-calls=300.      # number of calls in a given time interval
-interval=900. # the time interval, in secs (1800 s == 30 minutes)
-landa=calls/interval
-T=180.        # average call duration, in secs
-m=65            # number of agents
-u=landa*T      # traffic intensity
-p=u/m          # agent occupancy
-
-print landa,'calls/interval'
-print u,'traffic intensity'
-print m,'agents'
-print p,'agent occupancy'
-print erlangC(m,u)*100,'% probability of waiting, ErlangC'
-print ASA(m,u,T),'secs, average speed of answer (ASA)'
-target=45
-print SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'secs'
-nivel=0.95
-print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls answered in <',target,'secs'
-
-######################################################################################
-
-print "-"*10
-
-calls=650.      # number of calls in a given time interval
-interval=3600. # the time interval, in secs (1800 s == 30 minutes)
-landa=calls/interval
-T=150.        # average call duration, in secs
-m=34            # number of agents
-u=landa*T      # traffic intensity
-p=u/m          # agent occupancy
-
-print landa,'calls/interval'
-print u,'traffic intensity'
-print m,'agents'
-print p,'agent occupancy'
-print erlangC(m,u)*100,'% probability of waiting, ErlangC'
-print ASA(m,u,T),'secs, average speed of answer (ASA)'
-target=30
-print SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'secs'
-nivel=0.5
-print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls answered in <',target,'secs'
+    print(calls, interval, landa,'calls, interval, landa = calls/interval')
+    print(u,'traffic intensity')
+    print(m,'agents')
+    print(p,'agent occupancy')
+    print(erlangC(m,u)*100,'% probability of waiting, ErlangC')
+    print(ASA(m,u,T),'secs, average speed of answer (ASA)')
+    print(SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'secs')
+    print(agentsNeeded(u,T,level,target),'agents needed to reach',level*100,'% calls answered in <',target,'secs')
 
 
-######################################################################################
+def main():
+    # calls       number of calls in a given time interval
+    # interval    the time interval, in secs (1800 s == 30 minutes)
+    # landa       calls/interval
+    # T           average call duration, in secs
+    # m           number of agents
+    # u=landa*T   traffic intensity
+    # p=u/m       agent occupancy
+    TESTS = [
+        #calls,interval,T,m,target,level
+        [360, 1800,  240, 55,   15, 0.70],
+        [300,  900,  180, 65,   45, 0.95],
+        [650, 3600,  150, 34,   30, 0.50],
+        [20,  3600, 1800, 11, 3600, 0.80],
+    ]
 
-print "-"*16
-print "-"*3,"EXAMPLE 1","-"*3
-print "-"*16
+    for dataset in TESTS:
+        calls,interval,T,m,target,level = dataset
+        showStats(calls,interval,T,m,target,level)
+        print("-"*10)
 
-calls=20.      # number of calls in a given time interval
-interval=3600. # the time interval, in secs (1800 s == 30 minutes)
-landa=calls/interval
-T=1800.        # average call duration, in secs
-m=11           # number of agents
-u=landa*T      # traffic intensity
-p=u/m          # agent occupancy
-
-print landa,'calls/interval'
-print u,'traffic intensity'
-print m,'agents'
-print p,'agent occupancy'
-print erlangC(m,u)*100,'% probability of waiting, ErlangC'
-print ASA(m,u,T),'secs, average speed of answer (ASA)'
-target=3600
-print SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'secs'
-nivel=0.8
-print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls answered in <',target,'secs'
-
-
-######################################################################################
-
-print "-"*16
-print "-"*3,"EXAMPLE 2","-"*3
-print "-"*16
-
-calls=4280.      # number of calls in a given time interval
-interval=168.    # the time interval, in hours (7dx24h = 168)
-landa=calls/interval
-T=1./6           # average call duration, in hours
-m=6           # number of agents
-u=landa*T      # traffic intensity
-p=u/m          # agent occupancy
-
-print landa,'calls/interval'
-print u,'traffic intensity'
-print m,'agents'
-print p,'agent occupancy'
-print erlangC(m,u)*100,'% probability of waiting, ErlangC'
-print ASA(m,u,T),'hrs, average speed of answer (ASA)'
-target=0.5
-print SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'hrs'
-nivel=0.87
-print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls answered in <',target,'hrs'
-
-######################################################################################
-
-print "-"*16
-print "-"*3,"EXAMPLE 3","-"*3
-print "-"*16
-
-calls=1282.    # number of calls in a given time interval
-interval=60.   # the time interval, in hours (5dx12h = 60)
-landa=calls/interval
-T=0.75         # average call duration, in hours
-m=18           # number of agents
-u=landa*T      # traffic intensity
-p=u/m          # agent occupancy
-
-print landa,'calls/interval'
-print u,'traffic intensity'
-print m,'agents'
-print p,'agent occupancy'
-print erlangC(m,u)*100,'% probability of waiting, ErlangC'
-print ASA(m,u,T),'hrs, average speed of answer (ASA)'
-target=1
-print SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'hrs'
-nivel=0.89
-print agentsNeeded(u,T,nivel,target),'agents needed to reach',nivel*100,'% calls answered in <',target,'hrs'
-
-
+if __name__ == "__main__":
+    main()
