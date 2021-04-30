@@ -63,15 +63,12 @@ def showStats(calls,interval,T,m,target,level):
     u=landa*T      # traffic intensity
     p=u/m          # agent occupancy
 
-    print(calls, interval, landa,'calls, interval, landa = calls/interval')
-    print(u,'traffic intensity')
-    print(m,'agents')
-    print(p,'agent occupancy')
-    print(erlangC(m,u)*100,'% probability of waiting, ErlangC')
-    print(ASA(m,u,T),'secs, average speed of answer (ASA)')
-    print(SLA(m,u,T,target)*100,'% probability call is answered in less than',target,'secs')
-    print(agentsNeeded(u,T,level,target),'agents needed to reach',level*100,'% calls answered in <',target,'secs')
-
+    print('calls: {}   interval: {}   landa: {:.8f} (l = calls/interval)'.format(calls, interval, landa))
+    print('traffic intensity: {:.2f}   agents: {}    agent occupancy: {:.2f}'.format(u,m,p))
+    print('ErlangC, Probability of waiting: {:.2f}%'.format(erlangC(m,u)*100))
+    print('ASA, Average speed of answer: {:.1f} secs'.format(ASA(m,u,T)))
+    print('Probability call is answered in less than {} secs: {:.2f}%'.format(target,SLA(m,u,T,target)*100))
+    print('Agents needed to reach {:.2f}% calls answered in <{} secs: {}'.format(level*100,target,agentsNeeded(u,T,level,target)))
 
 def main():
     # calls       number of calls in a given time interval
@@ -86,7 +83,7 @@ def main():
         [360, 1800,  240, 55,   15, 0.70],
         [300,  900,  180, 65,   45, 0.95],
         [650, 3600,  150, 34,   30, 0.50],
-        [20,  3600, 1800, 11, 3600, 0.80],
+        [20,  3600, 1800, 11, 3600, 0.80]
     ]
 
     for dataset in TESTS:
